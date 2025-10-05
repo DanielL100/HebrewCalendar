@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="Tizen Wearable Web Basic Template" />
+
+    <title>תפריט</title>
+
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <script src="js/main.js"></script>
+</head>
+
+<body>
+    <div id="container">
+        יום:
+        <input type="number" id="day">
+        חודש:
+        <input type="number" id="month">
+        שנה:
+        <input type="number" id="year">
+        <button id="btn" onclick="runAll(); getAddons();">calc</button>
+		<span id="hebDate" class="text"></span>
+    	<button onclick="location.href = 'bread.html';" class="mainBtn">ברכת המזון</button>
+    	<button onclick="location.href = 'grain.html';" class="mainBtn">מעין שלוש</button>
+    	<button onclick="location.href = 'otherFood.html';" class="mainBtn">בורא נפשות</button>
+    	<button onclick="location.href = 'options.html';" class="mainBtn">הגדרות</button>
+    </div>
+</body>
+
+</html>

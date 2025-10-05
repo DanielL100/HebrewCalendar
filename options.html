@@ -1,0 +1,84 @@
+<html>
+	<head>
+		<meta charset="utf-8" />
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	    <meta name="description" content="Tizen Wearable Web Basic Template" />
+	
+	    <title>הגדרות</title>
+	
+	    <link rel="stylesheet" type="text/css" href="css/style.css" />
+	    <script src="js/main.js"></script>
+	</head>
+	
+	<body>
+		<div id="container">
+			<div id="version">
+				<div class="text">
+					נוסח:  
+				</div>
+				<select id="selectVersion">
+					<option value="1">אשכנז</option>
+					<option value="2">ספרד</option>
+					<option value="3">עדות המזרח</option>
+				</select>
+			</div>
+		
+			<div id="color">
+				<div class="text">
+					צבע להוראות: 
+				</div>
+				<select id="selectColorInstructions" onchange="showExams()">
+					<option value="red">אדום</option>
+					<option value="yellow">צהוב</option>
+					<option value="green">ירוק</option>
+					<option value="blue">כחול</option>
+				</select>
+				<br />
+				<span id="exam1">בדיקה</span>
+			</div>
+			
+			<div id="size">
+				<div class="text">
+					גודל הטקסט: 
+				</div>
+				<select id="selectSizeText" onchange="showExams()">
+					<option value="1em">קטן</option>
+					<option value="2em">גדול</option>
+					<option value="3em">גדול מאוד</option>
+				</select>
+				<br />
+				<span id="exam2">בדיקה</span>
+			</div>
+			
+			<div id="city">
+				<div class="text">
+					עיר: 
+				</div>
+				<select id="selectCity">
+					<option value="0">ירושלים</option>
+					<option value="1">חיפה</option>
+					<option value="2">אשדוד</option>
+					<option value="3">תל אביב</option>
+					<option value="4">נתניה</option>
+					<option value="5">כפר סבא</option>
+					<option value="6">חדרה</option>
+					<option value="7">ראשון לציון</option>
+					<option value="8">אשקלון</option>
+					<option value="9">פתח תקווה</option>
+					<option value="10">נצרת</option>
+					<option value="11">באר שבע</option>
+					<option value="12">עכו</option>
+					<option value="13">אילת</option>
+					<option value="14">עפולה</option>
+					<option value="15">חולון</option>
+					<option value="16">בני ברק</option>
+					<option value="17">נהריה</option>
+					<option value="18">ערד</option>
+				</select>
+			</div>
+			
+			<button class="optionBtn" id="saveBtn" onclick="changeVersion();changeColor();changeSize();changeCity();backMenu();">שמור</button>
+			<button class="optionBtn" id="backBtn" onclick="backMenu()">חזור</button>
+		</div>
+	</body>
+</html>
