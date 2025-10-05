@@ -1,21 +1,10 @@
+//the mainly tutorial for the calcs is - https://www.yeshiva.org.il/wiki/index.php/%D7%9E%D7%93%D7%A8%D7%99%D7%9A_%D7%9C%D7%94%D7%9B%D7%A0%D7%AA_%D7%9C%D7%95%D7%97_%D7%A9%D7%A0%D7%94_%D7%A2%D7%91%D7%A8%D7%99
+
 window.onload = function() {
     // TODO:: Do your initialization job
 	if(localStorage["version"] == null)
 		localStorage["version"] = "1";
-	
-	switch(document.title){
-	case "ברכת המזון":
-		breadText();
-		break;
-	case "מעין שלוש":
-		grainText();
-		break;
-	case "בורא נפשות":
-		break;
-	default:
-		break;
-	}
-	
+
 	if(localStorage["city"] == null)
 		localStorage["city"] = 0;
 	
@@ -33,10 +22,30 @@ window.onload = function() {
 	for(i = 0; i < texts.length; i++)
 		texts[i].style.fontSize = localStorage["sizeText"];
 	
-	if(document.getElementById("hebDate") != null)
-		runAll();
-	
+	switch(document.title){
+	case "ברכת המזון":
+		breadText();
+		break;
+	case "מעין שלוש":
+		grainText();
+		break;
+	case "בורא נפשות":
+		break;
+	case "תפריט":
+		var d = new Date();
+		document.getElementById("year").value = d.getFullYear();
+		document.getElementById("day").value = d.getDate();
+		document.getElementById("month").value = d.getMonth() + 1;
+		
+		if(document.getElementById("hebDate") != null)
+			runAll();
+		break;
+	default:
+		break;
+	}
+
 	getAddons();
+	
     // add eventListener for tizenhwkey
     document.addEventListener('tizenhwkey', function(e) {
         if (e.keyName === "back") {
@@ -149,6 +158,7 @@ function grainText(){
 
 function getAddons(){
 	var holidayVersion;
+	var goodday = false;
 	
 	if(localStorage["version"] == 1)
 		holidayVersion = "A";
@@ -157,8 +167,10 @@ function getAddons(){
 	else
 		holidayVersion = "EH";
 	
-	if(localStorage["hebrewDay"] == "א'" || localStorage["hebrewDay"] == "ל'")
+	if(localStorage["hebrewDay"] == "א'" || localStorage["hebrewDay"] == "ל'"){
 		holidayVersion += "RoshHodesh";
+		goodday = true;
+	}
 		
 	for(i = 0; i < document.getElementsByClassName(holidayVersion).length; i++)
 		document.getElementsByClassName(holidayVersion)[i].style.display = "block";
@@ -177,9 +189,11 @@ function getAddons(){
 				case "א'":
 				case "ב'":
 					holidayVersion += "RoshHashana";
+					goodday = true;
 					break;
 				case "י'":
 					holidayVersion += "YomKipoor";
+					goodday = true;
 					break;
 				case 'ט"ו':
 					holidayVersion += "Hag-";
@@ -190,9 +204,11 @@ function getAddons(){
 				case "כ'":
 				case 'כ"א':
 					holidayVersion += "Soocot";
+					goodday = true;
 					break;
 				case 'כ"ב':
 					holidayVersion += "ShminiAtzeret";
+					goodday = true;
 					break;
 			}
 			break;
@@ -205,6 +221,7 @@ function getAddons(){
 				case 'כ"ט':
 				case "ל'":
 					holidayVersion += "Hanoka";
+					goodday = true;
 					break;
 			}
 			break;
@@ -213,10 +230,12 @@ function getAddons(){
 				case "א'":
 				case "ב'":
 					holidayVersion += "Hanoka";
+					goodday = true;
 					break;
 				case "ג'":
 					if(missOrFull == 'K')
 						holidayVersion += "Hanoka";
+						goodday = true;
 					break;
 			}
 			break;
@@ -225,9 +244,11 @@ function getAddons(){
 			switch(localStorage["hebrewDay"]){
 				case 'י"ד':
 					holidayVersion += "Porim";
+					goodday = true;
 					break;
 				case 'ט"ו':
 					holidayVersion += "Porim";
+					goodday = true;
 					break;
 			}
 			break;
@@ -242,6 +263,7 @@ function getAddons(){
 				case "כ'":
 				case 'כ"א':
 					holidayVersion += "Pesach";
+					goodday = true;
 					break;
 			}
 			break;
@@ -249,6 +271,7 @@ function getAddons(){
 			switch(localStorage["hebrewDay"]){
 				case "ו'":
 					holidayVersion += "Shavoohot";
+					goodday = true;
 					break;
 			}
 			break;
@@ -257,9 +280,17 @@ function getAddons(){
 	for(i = 0; i < document.getElementsByClassName(holidayVersion).length; i++){
 		document.getElementsByClassName(holidayVersion)[i].style.display = "block";
 	}
+
+	if(goodday){
+		for(i = 0; i < document.getElementsByClassName("inlineAddon").length; i++)
+			document.getElementsByClassName("inlineAddon")[i].style.display = "inline";
+		for(i = 0; i < document.getElementsByClassName("hide").length; i++)
+			document.getElementsByClassName("hide")[i].style.display = "none";
+	}
 }
 
 var passover;
+var passoverMonth = 3;
 var roshHashanaDay;
 var roshHashanaMonth;
 
@@ -675,13 +706,13 @@ function getHebrewDate(){
 	var tempYear = hebrewYear - 3761;
 	
 	if(!(day == roshHashanaDay && month == roshHashanaMonth && year + 3761 == hebrewYear)){
-		if(month == roshHashanaMonth && day > roshHashanaDay){
+		if(year + 3761 == hebrewYear && month == roshHashanaMonth && day > roshHashanaDay){
 			countDays = day - roshHashanaDay;
 		} else {
 			tempMonth++;
 			
 			if(roshHashanaMonth == 9)
-				countDays = 30 - roshHashanaDay;
+				countDays = 30 - roshHashanaDay ;
 			else if(roshHashanaMonth == 10)
 				countDays = 31 - roshHashanaDay;
 			
@@ -729,7 +760,12 @@ function getHebrewDate(){
 	
 	
 	
-	while((countDays >= 30 && hebrewMonth % 2 == 1 && !isMeoobheret) || (countDays >= 29 && hebrewMonth % 2 == 0 && !isMeoobheret) || (missOrFull == "H" && countDays >= 30 && hebrewMonth == 2) || (missOrFull == "K" && countDays >= 29 && hebrewMonth == 3) || (((countDays >= 30 && hebrewMonth % 2 == 1) || (countDays >= 29 && hebrewMonth % 2 == 0)) && hebrewMonth < 6 && isMeoobheret) || (isMeoobheret && hebrewMonth >= 6 && ((countDays >= 29 && hebrewMonth % 2 == 1) || (countDays >= 30 && hebrewMonth % 2 == 0)))){
+	while((countDays >= 30 && hebrewMonth % 2 == 1 && !isMeoobheret)
+	|| (countDays >= 29 && hebrewMonth % 2 == 0 && !isMeoobheret)
+	|| (missOrFull == "H" && countDays >= 30 && hebrewMonth == 2)
+	|| (missOrFull == "K" && countDays >= 29 && hebrewMonth == 3)
+	|| (((countDays >= 30 && hebrewMonth % 2 == 1) || (countDays >= 29 && hebrewMonth % 2 == 0)) && hebrewMonth < 6 && isMeoobheret)
+	|| (isMeoobheret && hebrewMonth >= 6 && ((countDays >= 29 && hebrewMonth % 2 == 1) || (countDays >= 30 && hebrewMonth % 2 == 0)))){
 		switch (hebrewMonth){
 			case 2:
 				if(missOrFull == "H")
@@ -790,12 +826,13 @@ function getHebrewDate(){
 	getHebrewMonthLetters();
 	getHebrewYearLetters();
 	
-	document.getElementById("hebDate").innerHTML += hebrewDay + " " + hebrewMonth + " " + hebrewYear;
+	document.getElementById("hebDate").innerHTML = hebrewDay + " " + hebrewMonth + " " + hebrewYear;
 	localStorage["hebrewDay"] = hebrewDay;
 	localStorage["hebrewMonth"] = hebrewMonth;
 	localStorage["hebrewYear"] = hebrewYear;
 }
 
+//calc if Kislev is missing or Heshvan is full or neither
 function getMissOrFullDays(){
 	var roshHashanaDays;
 	var roshHashanaHours;
@@ -807,9 +844,11 @@ function getMissOrFullDays(){
 	var nextRoshHashanaParts;
 	var nextRoshHashanaRealDay;
 	
+	//first molad
 	const firstMoladDays = 2;
 	const firstMoladHours = 5;
 	const firstMoladParts = 204;
+	//difference of molads
 	const diffMoladDays = 29;
 	const diffMoladHours = 12;
 	const diffMoladParts = 793;
@@ -818,11 +857,11 @@ function getMissOrFullDays(){
 	var pastMonthes;
 	var daysRegularYear = 354;
 	
-	getIsMeoobheret();
 	if(isMeoobheret){
 		daysRegularYear += 30;
 	}
-	
+
+	//calc how many months have passed since first molad
 	if(meoobheret <= 3)
 		pastMonthes = 0;
 	else if(meoobheret <= 6)
@@ -843,11 +882,14 @@ function getMissOrFullDays(){
 	pastMonthes += parseInt((hebrewYear - 1) / 19) * 7;
 	
 	pastMonthes += (hebrewYear - 1) * 12;
-	
+
+
+	//calc this year rosh hashana molad
 	roshHashanaParts = diffMoladParts * pastMonthes + firstMoladParts;
 	roshHashanaHours = diffMoladHours * pastMonthes + firstMoladHours;
 	roshHashanaDays = diffMoladDays * pastMonthes + firstMoladDays;
 	
+	//calc the real day in the week of rosh hashana
 	roshHashanaHours += parseInt(roshHashanaParts / 1080);
 	roshHashanaParts = roshHashanaParts % 1080;
 	roshHashanaDays += parseInt(roshHashanaHours / 24);
@@ -856,7 +898,6 @@ function getMissOrFullDays(){
 	
 	if(roshHashanaDays == 0)
 		roshHashanaDays = 7;
-	
 	
 	roshHashanaRealDay = roshHashanaDays;
 	
@@ -869,7 +910,7 @@ function getMissOrFullDays(){
 	if(roshHashanaRealDay == 1 || roshHashanaRealDay == 4 || roshHashanaRealDay == 6)
 		roshHashanaRealDay++;
 		
-	
+	//calc next year rosh hashana molad
 	if(isMeoobheret){
 		nextRoshHashanaParts = diffMoladParts * 13 + roshHashanaParts;
 		nextRoshHashanaHours = diffMoladHours * 13 + roshHashanaHours;
@@ -880,6 +921,7 @@ function getMissOrFullDays(){
 		nextRoshHashanaDays = diffMoladDays * 12 + roshHashanaDays;
 	}
 	
+	//calc the real day in the week of next rosh hashana
 	nextRoshHashanaHours += parseInt(nextRoshHashanaParts / 1080);
 	nextRoshHashanaParts = nextRoshHashanaParts % 1080;
 	nextRoshHashanaDays += parseInt(nextRoshHashanaHours / 24);
@@ -901,7 +943,7 @@ function getMissOrFullDays(){
 		nextRoshHashanaRealDay++;
 	
 	
-	
+	//calc which month is missing or full or nothing
 	if((roshHashanaRealDay + daysRegularYear) % 7 > nextRoshHashanaRealDay){
 		missOrFull = "K"; //Kislev is missing a day
 	}else if((roshHashanaRealDay + daysRegularYear) % 7 < nextRoshHashanaRealDay){
@@ -919,12 +961,11 @@ function getIsMeoobheret(){
 }
 
 function getHebrewYear(){
-	var d = new Date();
-	hebrewYear = d.getFullYear() + 3760;
+	hebrewYear = parseInt(year) + 3760;
 	
 	if(!beforeRoshHashana){
 		hebrewYear += 1;
-	}else{
+	} else {
 		year--;
 		getPassover();
 		getRoshHashana();
@@ -935,7 +976,7 @@ function getHebrewYear(){
 }
 
 function isBeforeRoshHashana(){
-	if((localStorage["hour"] > localStorage["sunset"].split(":")[0]) || (localStorage["hour"] == localStorage["sunset"].split(":")[0] && localStorage["min"] >= localStorage["sunset"].split(":")[1])){
+	if((parseInt(localStorage["hour"]) > parseInt(localStorage["sunset"].split(":")[0])) || (parseInt(localStorage["hour"]) == parseInt(localStorage["sunset"].split(":")[0]) && parseInt(localStorage["min"]) >= parseInt(localStorage["sunset"].split(":")[1]))){
 		getNextDay();
 		calcRiseSet(true, "sunrise");
 		calcRiseSet(false, "sunset");
@@ -991,11 +1032,14 @@ function getNextDay(){
 function getRoshHashana(){
 	var daysBetween = 163;
 	
-	daysBetween -= 30 - passover;
+	if(passoverMonth == 3)
+		daysBetween -= 31 - passover;
+	else
+		daysBetween -= 30 - passover;
 	roshHashana = 1;
-	roshHashanaMonth = 5;
+	roshHashanaMonth = passoverMonth + 1;
 	
-	while((daysBetween > 31 && (roshHashanaMonth == 5 || roshHashanaMonth == 7 || roshHashanaMonth == 8 || roshHashanaMonth == 10)) || (daysBetween > 30 && (roshHashanaMonth == 6 || roshHashanaMonth == 9))){
+	while((daysBetween > 31 && (roshHashanaMonth == 5 || roshHashanaMonth == 7 || roshHashanaMonth == 8 || roshHashanaMonth == 10)) || (daysBetween > 30 && (roshHashanaMonth == 4 || roshHashanaMonth == 6 || roshHashanaMonth == 9))){
 		switch(roshHashanaMonth){
 			case 5:
 			case 7:
@@ -1003,6 +1047,7 @@ function getRoshHashana(){
 			case 10:
 				daysBetween -= 31;
 				break;
+			case 4:
 			case 6:
 			case 9:
 				daysBetween -= 30;
@@ -1015,6 +1060,8 @@ function getRoshHashana(){
 }
 
 function getPassover(){
+	//done according to https://he.wikipedia.org/wiki/%D7%94%D7%9C%D7%95%D7%97_%D7%94%D7%99%D7%95%D7%9C%D7%99%D7%90%D7%A0%D7%99
+	passoverMonth = 3;
 	var A = parseInt(year) + 3760;//tizen.time.getCurrentDateTime().getFullYear() + 3760;
 	var a = (12 * A + 17) % 19;
 	var b = A % 4;
@@ -1029,22 +1076,28 @@ function getPassover(){
 		passover = 1 + parseInt(x / 1);
 	} else 
 		passover = parseInt(x / 1);
+
+	passover += 13;
 	
-	passover += 13 - 31;
+	if(passover > 31){
+		passover -= 31;
+		passoverMonth += 1;
+	}
 	
 	
 }
 
+//gets curent year, month, day and time
 function getYear(){
 	var d = new Date();
-	year = d.getFullYear();
+	year = parseInt(document.getElementById("year").value);
 	localStorage["year"] = year;
-	day = d.getDate();
-	month = d.getMonth() + 1;
-	localStorage["day"] = day;
-	localStorage["month"] = month;
+	day = parseInt(document.getElementById("day").value);
+	month = parseInt(document.getElementById("month").value);
+	localStorage["day"] = document.getElementById("day").value;
+	localStorage["month"] = document.getElementById("month").value;
 	
-	var time = (d.getHours() + 1) + ":" + (d.getMinutes() + 1);
+	var time = (d.getHours()) + ":" + (d.getMinutes());
 	localStorage["hour"] = parseInt(time.split(":")[0]);
 	localStorage["min"] = parseInt(time.split(":")[1]);
 }
@@ -1069,109 +1122,116 @@ var cities = [{City:"Haifa", lat:"32.81841", lon:"34.9885"},
               {City:"Arad", lat:"31.25882", lon:"35.21282"}
               ];
 
-function calcRiseSet(isRise, id){
-	var isSummer = false;
-
-	var lat = cities[localStorage["city"]]["lat"];
-	var lon = cities[localStorage["city"]]["lon"];
-
-	const toRad = Math.PI / 180;
-	const toDeg = 180 / Math.PI;
-	const zenith = 90.8;
-
-	var day = parseInt(localStorage["day"]);
-	var month = parseInt(localStorage["month"]);
-	var year = parseInt(localStorage["year"]);
-
-	if(month > 3 && month < 10)
-		isSummer = true;
-	else if(month == 3){
-		var d = new Date();
-		d.setFullYear(year, 2, 31);
-		var fridayBeforeSunday = d.getDate() - d.getDay() - 2;
+      function calcRiseSet(isRise, id){
+      	var isSummer = false;
+      	
+      	var lat = cities[localStorage["city"]]["lat"];
+      	var lon = cities[localStorage["city"]]["lon"];
+      	
+      	const toRad = Math.PI / 180;
+      	const toDeg = 180 / Math.PI;
+      	const zenith = 90.8;
+      	
+      	var day = parseInt(localStorage["day"]);
+      	var month = parseInt(localStorage["month"]);
+      	var year = parseInt(localStorage["year"]);
+      	
+      	if(month > 3 && month < 10)
+      		isSummer = true;
+      	else if(month == 3){
+      		var d = new Date();
+      		d.setFullYear(year, 2, 31);
+      		var fridayBeforeSunday = d.getDate() - d.getDay() - 2;
+      		
+      		if(day > fridayBeforeSunday)
+      			isSummer = true;
+      	} else if(month == 10){
+      		var d = new Date();
+      		d.setFullYear(year, 9, 31);
+      		var lastSunday = d.getDate() - d.getDay();
+      		
+      		if(day <= lastSunday)
+      			isSummer = true;
+      	}
+      	
+      	var N1 = Math.floor(275 * month / 9);
+      	var N2 = Math.floor((month + 9) / 12);
+      	var N3 = (1 + Math.floor((year - 4 * Math.floor(year / 4) + 2) / 3));
+      	var N = N1 - (N2 * N3) + day - 30;
+      	
+      	var lngHour = lon / 15;
+      	var t;
+      	
+      	if(isRise)
+      		t = N + ((6 - lngHour) / 24);
+      	else
+      		t = N + ((18 - lngHour) / 24);
+      	
+      	
+      	var M = (0.9856 * t) - 3.289;
+      	
+      	var L = M + (1.916 * Math.sin(toRad * M)) + (0.020 * Math.sin(2 * M * toRad)) + 282.634;
+      	while(L > 360)
+      		L -= 360;
+      	while(L < 0)
+      		L += 360;
+      	
+      	var RA = (1/toRad) * Math.atan(0.91764 * Math.tan(L * toRad));
+      	while(RA > 360)
+      		RA -= 360;
+      	while(RA < 0)
+      		RA += 360;
+      	
+      	var Lquadrant = (Math.floor(L / 90)) * 90;
+      	var RAquadrant = (Math.floor(RA / 90)) * 90;
+      	RA = RA + (Lquadrant - RAquadrant);
+      	RA = RA / 15;
+      	
+      	var sinDec = 0.39782 * Math.sin(L * toRad);
+      	var cosDec = Math.cos(Math.asin(sinDec));
+      	
+      	var cosH = (Math.cos(zenith * toRad) - (sinDec * Math.sin(lat * toRad))) / (cosDec * Math.cos(lat * toRad));
+      	if(cosH > 1)
+      		return "Sun Not Rising";
+      	
+      	if(cosH < -1)
+      		return "Sum Not Setting";
+      	
+      	
+      	var H;
+      	
+      	if(isRise)
+      		H = 360 - (1 / toRad) * Math.acos(cosH);
+      	else
+      		H = (1 / toRad) * Math.acos(cosH);
+      	
+      	H = H / 15;
+      	
+      	var T = H + RA - (0.06571 * t) - 6.622;
+      	
+      	var UT = T - lngHour;
+      	while(UT > 24)
+      		UT -= 24;
+      	while(UT < 0)
+      		UT += 24;
+      	
+      	var hr = parseInt(UT) + 2;
+      	while(hr > 24)
+      		hr -= 24;
+      	while(hr < 0)
+      		hr += 24;
+      	
+      	if(isSummer)
+      		hr += 1;
+      	
+      	var min = Math.round((UT - parseInt(UT)) * 60);
 		
-		if(day > fridayBeforeSunday)
-			isSummer = true;
-	} else if(month == 10){
-		var d = new Date();
-		d.setFullYear(year, 9, 31);
-		var lastSunday = d.getDate() - d.getDay();
-		
-		if(day <= lastSunday)
-			isSummer = true;
-	}
-
-	var N1 = Math.floor(275 * month / 9);
-	var N2 = Math.floor((month + 9) / 12);
-	var N3 = (1 + Math.floor((year - 4 * Math.floor(year / 4) + 2) / 3));
-	var N = N1 - (N2 * N3) + day - 30;
-
-	var lngHour = lon / 15;
-	var t;
-
-	if(isRise)
-		t = N + ((6 - lngHour) / 24);
-	else
-		t = N + ((18 - lngHour) / 24);
-
-
-	var M = (0.9856 * t) - 3.289;
-
-	var L = M + (1.916 * Math.sin(toRad * M)) + (0.020 * Math.sin(2 * M * toRad)) + 282.634;
-	while(L > 360)
-		L -= 360;
-	while(L < 0)
-		L += 360;
-
-	var RA = (1/toRad) * Math.atan(0.91764 * Math.tan(L * toRad));
-	while(RA > 360)
-		RA -= 360;
-	while(RA < 0)
-		RA += 360;
-
-	var Lquadrant = (Math.floor(L / 90)) * 90;
-	var RAquadrant = (Math.floor(RA / 90)) * 90;
-	RA = RA + (Lquadrant - RAquadrant);
-	RA = RA / 15;
-
-	var sinDec = 0.39782 * Math.sin(L * toRad);
-	var cosDec = Math.cos(Math.asin(sinDec));
-
-	var cosH = (Math.cos(zenith * toRad) - (sinDec * Math.sin(lat * toRad))) / (cosDec * Math.cos(lat * toRad));
-	if(cosH > 1)
-		return "Sun Not Rising";
-
-	if(cosH < -1)
-		return "Sum Not Setting";
-
-
-	var H;
-
-	if(isRise)
-		H = 360 - (1 / toRad) * Math.acos(cosH);
-	else
-		H = (1 / toRad) * Math.acos(cosH);
-
-	H = H / 15;
-
-	var T = H + RA - (0.06571 * t) - 6.622;
-
-	var UT = T - lngHour;
-	while(UT > 24)
-		UT -= 24;
-	while(UT < 0)
-		UT += 24;
-
-	var hr = parseInt(UT) + 2;
-	while(hr > 24)
-		hr -= 24;
-	while(hr < 0)
-		hr += 24;
-
-	if(isSummer)
-		hr += 1;
-
-	var min = Math.round((UT - parseInt(UT)) * 60);
-
-	localStorage[id] = hr + ":" + min;
-}
+		if(min == 60){
+			hr += 1;
+			min = 0;
+		}
+		if(min <= 9)
+		  localStorage[id] = hr + ":0" + min;
+	  	else
+		  localStorage[id] = hr + ":" + min;
+      }

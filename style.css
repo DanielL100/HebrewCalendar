@@ -79,7 +79,7 @@ option {
 	margin-bottom: 1%;
 }
 
-.addon {
+.addon, .inlineAddon {
 	display: none;
 }
 
