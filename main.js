@@ -1069,109 +1069,109 @@ var cities = [{City:"Haifa", lat:"32.81841", lon:"34.9885"},
               {City:"Arad", lat:"31.25882", lon:"35.21282"}
               ];
 
-      function calcRiseSet(isRise, id){
-      	var isSummer = false;
-      	
-      	var lat = cities[localStorage["city"]]["lat"];
-      	var lon = cities[localStorage["city"]]["lon"];
-      	
-      	const toRad = Math.PI / 180;
-      	const toDeg = 180 / Math.PI;
-      	const zenith = 90.8;
-      	
-      	var day = parseInt(localStorage["day"]);
-      	var month = parseInt(localStorage["month"]);
-      	var year = parseInt(localStorage["year"]);
-      	
-      	if(month > 3 && month < 10)
-      		isSummer = true;
-      	else if(month == 3){
-      		var d = new Date();
-      		d.setFullYear(year, 2, 31);
-      		var fridayBeforeSunday = d.getDate() - d.getDay() - 2;
-      		
-      		if(day > fridayBeforeSunday)
-      			isSummer = true;
-      	} else if(month == 10){
-      		var d = new Date();
-      		d.setFullYear(year, 9, 31);
-      		var lastSunday = d.getDate() - d.getDay();
-      		
-      		if(day <= lastSunday)
-      			isSummer = true;
-      	}
-      	
-      	var N1 = Math.floor(275 * month / 9);
-      	var N2 = Math.floor((month + 9) / 12);
-      	var N3 = (1 + Math.floor((year - 4 * Math.floor(year / 4) + 2) / 3));
-      	var N = N1 - (N2 * N3) + day - 30;
-      	
-      	var lngHour = lon / 15;
-      	var t;
-      	
-      	if(isRise)
-      		t = N + ((6 - lngHour) / 24);
-      	else
-      		t = N + ((18 - lngHour) / 24);
-      	
-      	
-      	var M = (0.9856 * t) - 3.289;
-      	
-      	var L = M + (1.916 * Math.sin(toRad * M)) + (0.020 * Math.sin(2 * M * toRad)) + 282.634;
-      	while(L > 360)
-      		L -= 360;
-      	while(L < 0)
-      		L += 360;
-      	
-      	var RA = (1/toRad) * Math.atan(0.91764 * Math.tan(L * toRad));
-      	while(RA > 360)
-      		RA -= 360;
-      	while(RA < 0)
-      		RA += 360;
-      	
-      	var Lquadrant = (Math.floor(L / 90)) * 90;
-      	var RAquadrant = (Math.floor(RA / 90)) * 90;
-      	RA = RA + (Lquadrant - RAquadrant);
-      	RA = RA / 15;
-      	
-      	var sinDec = 0.39782 * Math.sin(L * toRad);
-      	var cosDec = Math.cos(Math.asin(sinDec));
-      	
-      	var cosH = (Math.cos(zenith * toRad) - (sinDec * Math.sin(lat * toRad))) / (cosDec * Math.cos(lat * toRad));
-      	if(cosH > 1)
-      		return "Sun Not Rising";
-      	
-      	if(cosH < -1)
-      		return "Sum Not Setting";
-      	
-      	
-      	var H;
-      	
-      	if(isRise)
-      		H = 360 - (1 / toRad) * Math.acos(cosH);
-      	else
-      		H = (1 / toRad) * Math.acos(cosH);
-      	
-      	H = H / 15;
-      	
-      	var T = H + RA - (0.06571 * t) - 6.622;
-      	
-      	var UT = T - lngHour;
-      	while(UT > 24)
-      		UT -= 24;
-      	while(UT < 0)
-      		UT += 24;
-      	
-      	var hr = parseInt(UT) + 2;
-      	while(hr > 24)
-      		hr -= 24;
-      	while(hr < 0)
-      		hr += 24;
-      	
-      	if(isSummer)
-      		hr += 1;
-      	
-      	var min = Math.round((UT - parseInt(UT)) * 60);
+function calcRiseSet(isRise, id){
+	var isSummer = false;
+
+	var lat = cities[localStorage["city"]]["lat"];
+	var lon = cities[localStorage["city"]]["lon"];
+
+	const toRad = Math.PI / 180;
+	const toDeg = 180 / Math.PI;
+	const zenith = 90.8;
+
+	var day = parseInt(localStorage["day"]);
+	var month = parseInt(localStorage["month"]);
+	var year = parseInt(localStorage["year"]);
+
+	if(month > 3 && month < 10)
+		isSummer = true;
+	else if(month == 3){
+		var d = new Date();
+		d.setFullYear(year, 2, 31);
+		var fridayBeforeSunday = d.getDate() - d.getDay() - 2;
 		
-		localStorage[id] = hr + ":" + min;
-      }
+		if(day > fridayBeforeSunday)
+			isSummer = true;
+	} else if(month == 10){
+		var d = new Date();
+		d.setFullYear(year, 9, 31);
+		var lastSunday = d.getDate() - d.getDay();
+		
+		if(day <= lastSunday)
+			isSummer = true;
+	}
+
+	var N1 = Math.floor(275 * month / 9);
+	var N2 = Math.floor((month + 9) / 12);
+	var N3 = (1 + Math.floor((year - 4 * Math.floor(year / 4) + 2) / 3));
+	var N = N1 - (N2 * N3) + day - 30;
+
+	var lngHour = lon / 15;
+	var t;
+
+	if(isRise)
+		t = N + ((6 - lngHour) / 24);
+	else
+		t = N + ((18 - lngHour) / 24);
+
+
+	var M = (0.9856 * t) - 3.289;
+
+	var L = M + (1.916 * Math.sin(toRad * M)) + (0.020 * Math.sin(2 * M * toRad)) + 282.634;
+	while(L > 360)
+		L -= 360;
+	while(L < 0)
+		L += 360;
+
+	var RA = (1/toRad) * Math.atan(0.91764 * Math.tan(L * toRad));
+	while(RA > 360)
+		RA -= 360;
+	while(RA < 0)
+		RA += 360;
+
+	var Lquadrant = (Math.floor(L / 90)) * 90;
+	var RAquadrant = (Math.floor(RA / 90)) * 90;
+	RA = RA + (Lquadrant - RAquadrant);
+	RA = RA / 15;
+
+	var sinDec = 0.39782 * Math.sin(L * toRad);
+	var cosDec = Math.cos(Math.asin(sinDec));
+
+	var cosH = (Math.cos(zenith * toRad) - (sinDec * Math.sin(lat * toRad))) / (cosDec * Math.cos(lat * toRad));
+	if(cosH > 1)
+		return "Sun Not Rising";
+
+	if(cosH < -1)
+		return "Sum Not Setting";
+
+
+	var H;
+
+	if(isRise)
+		H = 360 - (1 / toRad) * Math.acos(cosH);
+	else
+		H = (1 / toRad) * Math.acos(cosH);
+
+	H = H / 15;
+
+	var T = H + RA - (0.06571 * t) - 6.622;
+
+	var UT = T - lngHour;
+	while(UT > 24)
+		UT -= 24;
+	while(UT < 0)
+		UT += 24;
+
+	var hr = parseInt(UT) + 2;
+	while(hr > 24)
+		hr -= 24;
+	while(hr < 0)
+		hr += 24;
+
+	if(isSummer)
+		hr += 1;
+
+	var min = Math.round((UT - parseInt(UT)) * 60);
+
+	localStorage[id] = hr + ":" + min;
+}
