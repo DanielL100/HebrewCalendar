@@ -376,10 +376,12 @@ const diffMoladHours = 12;
 const diffMoladParts = 793;
 ```
 
-ג. נגדיר עוד כמה דברים עבור החישוב למולד תשרי הנוכחי. נתחיל בלחשב את מספר השנה במחזור של 19 שנים. בנוסף, נגדיר משתנה שישמור כמה חודשים עברו מאז המולד הראשון ועד ראש השנה הנוכחי, וכן נגדיר משתנה שיכיל שיש בשנת ירח 354 ימים. באם השנה מעוברת נוסיף עוד 30 ימים של אדר א' למספר הימים שיש בשנת ירח.
+ג. נגדיר עוד כמה דברים עבור החישוב למולדות תשרי. נתחיל בלחשב את מספר השנה במחזור של 19 שנים והאם השנה שעברה ושנה הבאה יהיו מעוברות. בנוסף, נגדיר משתנה שישמור כמה חודשים עברו מאז המולד הראשון ועד ראש השנה הנוכחי, וכן נגדיר משתנה שיכיל שיש בשנת ירח 354 ימים. באם השנה מעוברת נוסיף עוד 30 ימים של אדר א' למספר הימים שיש בשנת ירח.
 
 ```js
 var meoobheret = hebrewYear % 19;
+var isLastYearMeoobheret = meoobheret == 4 || meoobheret == 7 || meoobheret == 9 || meoobheret == 12 || meoobheret == 15 || meoobheret == 18 || meoobheret == 1;
+var isNextYearMeoobheret = meoobheret == 2 || meoobheret == 5 || meoobheret == 7 || meoobheret == 10 || meoobheret == 13 || meoobheret == 16 || meoobheret == 18;
 var pastMonthes;
 var daysRegularYear = 354;
 
@@ -388,7 +390,109 @@ if(isMeoobheret){
 }
 ```
 
-ד. 
+ד. נתחיל מלחשב את מספר החודשים שעברו מהמולד הראשון עד המולד של תשרי הנוכחי. הדרך בה נעשה זאת היא לפי מחזורים של 19 שנים. לפיכך, נתחיל מלספור כמה שנים מעוברות היו עד השנה (לא כולל השנה) במחזור הנוכחי, ולצורך כך נעזר במשתנה שמכיל את מספר השנה במחזור הנוכחי. אם השנה היא שנים א', ב' או ג' אזי עברו 0 שנים מעוברות (גם ג' נכלל כי אנו מסתכלים על השנים שהיו לא כולל השנה, שהרי אנו מחשבים את המולד של השנה), אם השנה היא ד', ה' או ו' אז עברה שנה מעוברת אחת וכך הלאה. לאחר מכן נבדוק כמה מחזורים שלמים של 19 שנים היו עד השנה הזאת ונכפיל אותם  ב-7 חודשי אדר א' שהתווספו לשנים המועברות בכל מחזור. ולבסוף נוסיף 12 חודשים לכל שנה עד השנה הזאת (לא כולל).
+
+```js
+//calc how many months have passed since first molad
+if(meoobheret <= 3)
+	pastMonthes = 0;
+else if(meoobheret <= 6)
+	pastMonthes = 1;
+else if(meoobheret <= 8)
+	pastMonthes = 2;
+else if(meoobheret <= 11)
+	pastMonthes = 3;
+else if(meoobheret <= 14)
+	pastMonthes = 4;
+else if(meoobheret <= 17)
+	pastMonthes = 5;
+else if(meoobheret <= 19)
+	pastMonthes = 6;
+else
+	pastMonthes = 7;
+
+pastMonthes += parseInt((hebrewYear - 1) / 19) * 7;
+
+pastMonthes += (hebrewYear - 1) * 12;
+```
+
+ה. כעת אנו מוכנים לחשב את המולד של תשרי הנוכחי. ניקח את החלקים של המולד הראשון ונוסיף להם את מספר החלקים בין כל מולד למולד כפול מספר החודשים שעברו (שהרי המולד מתרחש כל חודש). באותו אופן נעשה לשעות ולימים. עם זאת, סביר שמספר החלקים יעבור את הסף שמוסיף שעה (1080 חלקים שווים שעה), וכן מספר השעות יעבור את הסף שמוסיף יום (24 שעות שווה יום). לאור זאת, נוסף לשעות את החלוקה של החלקים ב-1080, ונוסיף לימים את החלוקה של השעות ב-24. בשביל לקבל את החלקים, שעות ויום בו יחול המולד, נבצע חלוקת שארית ב-1080, 24 ו-7 בהתאמה. במידה וקיבלנו שהיום הוא 0, כלומר שבת, נבצע החלפה שלו ל-7. לכאורה, קיבלנו גם את היום בו יחול ראש השנה של השנה.
+
+```js
+//calc this year rosh hashana molad
+roshHashanaParts = diffMoladParts * pastMonthes + firstMoladParts;
+roshHashanaHours = diffMoladHours * pastMonthes + firstMoladHours;
+roshHashanaDays = diffMoladDays * pastMonthes + firstMoladDays;
+
+//calc the real day in the week of rosh hashana
+roshHashanaHours += parseInt(roshHashanaParts / 1080);
+roshHashanaParts = roshHashanaParts % 1080;
+roshHashanaDays += parseInt(roshHashanaHours / 24);
+roshHashanaHours = roshHashanaHours % 24;
+roshHashanaDays = roshHashanaDays % 7;
+
+if(roshHashanaDays == 0)
+	roshHashanaDays = 7;
+
+roshHashanaRealDay = roshHashanaDays;
+```
+
+ו. אף על פי שקיבלנו את המולד, ישנם עוד 4 כללים שעלינו לקחת בחשבון שעלולים לדחות את היום בו יחול ראש השנה (אמנם חישבנו בצורה אחרת את היום בו ראש השנה יחול, אך החישוב כאן רלוונטי בשביל קביעת חשוון וכסלו):
+ו.1. ראש השנה לא חל בימים א', ד' ו-ו'. אם קיבלנו שהמולד חל באחד מהימים האלה אזי ראש השנה יחול למחרת.
+ו.2. אם מספר השעות של המולד הוא גדול/שווה ל-18, זה נחשב מולד זקן (עבר שלושת רבעי יממה) וראש השנה ידחה למחרת. לאחר מכן יש לבדוק שוב את כלל ו.1.
+ו.3. אם המולד ביום ג', מספר השעות והחלקים גדול/שווה ל-9 שעות ו-204 חלקים והשנה אינה מעוברת - ראש השנה ידחה ליום ה'.
+ו.4. אם המולד ביום ב', מספר השעות והחלקים גדול/שווה ל-15 שעות ו-589 חלקים והשנה שהייתה היא מעוברת - ראש השנה ידחה למחרת, כלומר ליום ג'.
+
+```js
+if(roshHashanaRealDay == 1 || roshHashanaRealDay == 4 || roshHashanaRealDay == 6)
+	roshHashanaRealDay++;
+
+if(roshHashanaHours >= 18) {
+	roshHashanaRealDay++;
+	if(roshHashanaRealDay == 1 || roshHashanaRealDay == 4 || roshHashanaRealDay == 6)
+	roshHashanaRealDay++;
+}
+
+if(roshHashanaDays == 3 && ((roshHashanaHours > 9) || (roshHashanaHours == 9 && roshHashanaParts >= 204)) && !isMeoobheret)
+	roshHashanaRealDay = 5;
+
+if(roshHashanaDays == 2 && ((roshHashanaHours > 15) || (roshHashanaHours == 15 && roshHashanaParts >= 589)) && isLastYearMeoobheret)
+	roshHashanaRealDay = 3;
+
+if(roshHashanaRealDay > 7)
+	roshHashanaRealDay -= 7;
+```
+
+ז. באותו אופן נחשב את המולד של השנה הבאה כאשר נחסוך חישובים ונשתמש בחלקים, שעות וימים שחישבנו למולד הנוכחי. אם השנה הנוכחית מעוברת נוסיף להם 13 פעם את ההפרשים בין המולדות, אחרת נוסיף 12 פעם.
+
+```js
+//calc next year rosh hashana molad
+if(isMeoobheret){
+	nextRoshHashanaParts = diffMoladParts * 13 + roshHashanaParts;
+	nextRoshHashanaHours = diffMoladHours * 13 + roshHashanaHours;
+	nextRoshHashanaDays = diffMoladDays * 13 + roshHashanaDays;
+} else {
+	nextRoshHashanaParts = diffMoladParts * 12 + roshHashanaParts;
+	nextRoshHashanaHours = diffMoladHours * 12 + roshHashanaHours;
+	nextRoshHashanaDays = diffMoladDays * 12 + roshHashanaDays;
+}
+```
+
+ח. נחזור על מחצית שלב ה' ועל שלב ו' עבור המולד של תשרי שבשנה הבאה.
+
+ט. וכעת ניגש למלאכת חישוב החודשים החסרים והמלאים. נוסיף ליום בו חל ראש השנה את מספר הימים שיש בשנה ירחית רגילה (354) וניקח את שארית החלוקה ב-7. אם קיבלנו שעל פניו ראש השנה יחול אחרי היום האמיתי בו הוא אמור לחול, משמע שיש לנו יום מיותר השנה ולכן כסלו יהיה חסר. אם קיבלנו שעל פניו ראש השנה הבא יחול לפני היום האמיתי בו הוא אמור לחול, סימן שחסר לנו יום השנה וחשוון יהיה מלא. אחרת - הכל בסדר וחשוון יהיה חסר וכסלו יהיה מלא.
+
+```js
+//calc which month is missing or full or nothing
+if((roshHashanaRealDay + daysRegularYear) % 7 > nextRoshHashanaRealDay){
+	missOrFull = "K"; //Kislev is missing a day
+}else if((roshHashanaRealDay + daysRegularYear) % 7 < nextRoshHashanaRealDay){
+	missOrFull = "H"; //Heshvan get another day
+}
+else{
+	missOrFull = "R"; //Regular year
+}
+```
 
 
  
