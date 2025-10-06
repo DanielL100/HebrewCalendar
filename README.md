@@ -932,7 +932,7 @@ localStorage["hebrewYear"] = hebrewYear;
 
 ## תנאי שימוש
 
-ניתן להשתמש בקוד ובהסברים המצורפים באופן חופשי תוך מתן קרדיט לפרויקט זה בהתאם לרישיון [Attribution-NonCommercial 4.0 International] (https://creativecommons.org/licenses/by-nc/4.0/deed.en). עבור שימוש במקורות המצורפים יש לקרוא את תנאי השימוש הנלווים אליהם.
+ניתן להשתמש בקוד ובהסברים המצורפים באופן חופשי תוך מתן קרדיט לפרויקט זה בהתאם לרישיון [Attribution-NonCommercial 4.0 International](https://creativecommons.org/licenses/by-nc/4.0/deed.en). עבור שימוש במקורות המצורפים יש לקרוא את תנאי השימוש הנלווים אליהם.
 
 בכל תקלה או בעיה ניתן לפתוח פנייה בחלק ב-`issues`.
 
