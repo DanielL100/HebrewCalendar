@@ -834,6 +834,10 @@ localStorage["hebrewYear"] = hebrewYear;
         </tr>
     </thead>
     <tbody>
+		<tr>
+            <td>ראש חודש</td>
+            <td>א'/ל' בחודש</td>
+        </tr>
         <tr>
             <td>ראש השנה</td>
             <td>א'-ב' תשרי</td>
