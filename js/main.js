@@ -854,6 +854,8 @@ function getMissOrFullDays(){
 	const diffMoladParts = 793;
 	
 	var meoobheret = hebrewYear % 19;
+	var isLastYearMeoobheret = meoobheret == 4 || meoobheret == 7 || meoobheret == 9 || meoobheret == 12 || meoobheret == 15 || meoobheret == 18 || meoobheret == 1;
+	var isNextYearMeoobheret = meoobheret == 2 || meoobheret == 5 || meoobheret == 7 || meoobheret == 10 || meoobheret == 13 || meoobheret == 16 || meoobheret == 18;
 	var pastMonthes;
 	var daysRegularYear = 354;
 	
@@ -901,14 +903,23 @@ function getMissOrFullDays(){
 	
 	roshHashanaRealDay = roshHashanaDays;
 	
-	if(roshHashanaHours >= 18)
+	if(roshHashanaRealDay == 1 || roshHashanaRealDay == 4 || roshHashanaRealDay == 6)
 		roshHashanaRealDay++;
+	
+	if(roshHashanaHours >= 18) {
+		roshHashanaRealDay++;
+		if(roshHashanaRealDay == 1 || roshHashanaRealDay == 4 || roshHashanaRealDay == 6)
+		roshHashanaRealDay++;
+	}
+	
+	if(roshHashanaDays == 3 && ((roshHashanaHours > 9) || (roshHashanaHours == 9 && roshHashanaParts >= 204)) && !isMeoobheret)
+		roshHashanaRealDay = 5;
+	
+	if(roshHashanaDays == 2 && ((roshHashanaHours > 15) || (roshHashanaHours == 15 && roshHashanaParts >= 589)) && isLastYearMeoobheret)
+		roshHashanaRealDay = 3;
 	
 	if(roshHashanaRealDay > 7)
 		roshHashanaRealDay -= 7;
-	
-	if(roshHashanaRealDay == 1 || roshHashanaRealDay == 4 || roshHashanaRealDay == 6)
-		roshHashanaRealDay++;
 		
 	//calc next year rosh hashana molad
 	if(isMeoobheret){
@@ -933,14 +944,24 @@ function getMissOrFullDays(){
 	
 	nextRoshHashanaRealDay = nextRoshHashanaDays;
 	
-	if(nextRoshHashanaHours > 18)
+	if(nextRoshHashanaRealDay == 1 || nextRoshHashanaRealDay == 4 || nextRoshHashanaRealDay ==6)
 		nextRoshHashanaRealDay++;
+	
+	if(nextRoshHashanaHours > 18) {
+		nextRoshHashanaRealDay++;
+		if(nextRoshHashanaRealDay == 1 || nextRoshHashanaRealDay == 4 || nextRoshHashanaRealDay ==6)
+			nextRoshHashanaRealDay++;
+	}
+	
+	if(nextRoshHashanaDays == 3 && ((nextRoshHashanaHours > 9) || (nextRoshHashanaHours == 9 && nextRoshHashanaParts >= 204)) && !isNextYearMeoobheret)
+		nextRoshHashanaRealDay = 5;
+	
+	if(nextRoshHashanaDays == 2 && ((nextRoshHashanaHours > 15) || (nextRoshHashanaHours == 15 && nextRoshHashanaParts >= 589)) && isMeoobheret)
+		nextRoshHashanaRealDay = 3;
 	
 	if(nextRoshHashanaRealDay > 7)
 		nextRoshHashanaRealDay -= 7;
 	
-	if(nextRoshHashanaRealDay == 1 || nextRoshHashanaRealDay == 4 || nextRoshHashanaRealDay ==6)
-		nextRoshHashanaRealDay++;
 	
 	
 	//calc which month is missing or full or nothing
