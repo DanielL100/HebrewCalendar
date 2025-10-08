@@ -932,9 +932,15 @@ localStorage["hebrewYear"] = hebrewYear;
 
 ## תנאי שימוש
 
-ניתן להשתמש בקוד ובהסברים המצורפים באופן חופשי תוך מתן קרדיט לפרויקט זה בהתאם לרישיון [Attribution-NonCommercial 4.0 International](https://creativecommons.org/licenses/by-nc/4.0/deed.en). עבור שימוש במקורות המצורפים יש לקרוא את תנאי השימוש הנלווים אליהם.
+ניתן להשתמש בקוד ובהסברים המצורפים בהתאם לרישיון: [Creative Commons Attribution-NonCommercial 4.0 International License][cc-by-nc].
 
-בכל תקלה או בעיה ניתן לפתוח פנייה בחלק ב-`issues`.
+[![CC BY-NC 4.0][cc-by-nc-image]][cc-by-nc]
+
+[cc-by-nc]: https://creativecommons.org/licenses/by-nc/4.0/
+[cc-by-nc-image]: https://licensebuttons.net/l/by-nc/4.0/88x31.png
+[cc-by-nc-shield]: https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg
+
+עבור שימוש במקורות המצורפים יש לקרוא את תנאי השימוש הנלווים אליהם.
 
 
  
