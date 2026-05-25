@@ -36,6 +36,8 @@ window.onload = function() {
 		document.getElementById("year").value = d.getFullYear();
 		document.getElementById("day").value = d.getDate();
 		document.getElementById("month").value = d.getMonth() + 1;
+		document.getElementById("hour").value = d.getHours();
+		document.getElementById("minute").value = d.getMinutes();
 		
 		if(document.getElementById("hebDate") != null)
 			runAll();
