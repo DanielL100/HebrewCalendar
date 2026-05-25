@@ -965,9 +965,9 @@ function getMissOrFullDays(){
 	
 	
 	//calc which month is missing or full or nothing
-	if((roshHashanaRealDay + daysRegularYear) % 7 > nextRoshHashanaRealDay){
+	if((roshHashanaRealDay + daysRegularYear) % 7 > nextRoshHashanaRealDay % 7){
 		missOrFull = "K"; //Kislev is missing a day
-	}else if((roshHashanaRealDay + daysRegularYear) % 7 < nextRoshHashanaRealDay){
+	}else if((roshHashanaRealDay + daysRegularYear) % 7 < nextRoshHashanaRealDay % 7){
 		missOrFull = "H"; //Heshvan get another day
 	}
 	else{
