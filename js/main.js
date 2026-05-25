@@ -1120,9 +1120,8 @@ function getYear(){
 	localStorage["day"] = document.getElementById("day").value;
 	localStorage["month"] = document.getElementById("month").value;
 	
-	var time = (d.getHours()) + ":" + (d.getMinutes());
-	localStorage["hour"] = parseInt(time.split(":")[0]);
-	localStorage["min"] = parseInt(time.split(":")[1]);
+	localStorage["hour"] = document.getElementById("hour").value;
+	localStorage["min"] = document.getElementById("minute").value;
 }
 
 var cities = [{City:"Haifa", lat:"32.81841", lon:"34.9885"},
